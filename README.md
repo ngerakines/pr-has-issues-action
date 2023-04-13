@@ -17,7 +17,22 @@ n/a
 ## Example usage
 
 ```yaml
-uses: ngerakines/pr-has-issues-action
-with:
-  key_prefixes: PLAT-,ENG-,IT-
+name: PR
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ngerakines/pr-has-issues-action
+        with:
+          key_prefixes: PLAT-,ENG-,IT-
 ```
