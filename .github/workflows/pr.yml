@@ -1,4 +1,4 @@
-on: [push]
+name: PR
 
 on:
   pull_request:
@@ -15,3 +15,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./
+        with:
+          prefixes: "ISSUE-"
