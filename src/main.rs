@@ -33,21 +33,26 @@ fn main() -> Result<ExitCode> {
         serde_json::from_reader(reader)
     }?;
 
-
     if event.number.is_none() {
         println!("PR number not found.");
         return Ok(ExitCode::FAILURE);
     }
 
-
-    let search_title = event.pull_request.as_ref().and_then(|pr| pr.title.clone()).unwrap_or_default();
+    let search_title = event
+        .pull_request
+        .as_ref()
+        .and_then(|pr| pr.title.clone())
+        .unwrap_or_default();
 
     if search_title.is_empty() {
         println!("Title is empty");
         return Ok(ExitCode::FAILURE);
     }
 
-    let search_body = event.pull_request.and_then(|pr| pr.body).unwrap_or_default();
+    let search_body = event
+        .pull_request
+        .and_then(|pr| pr.body)
+        .unwrap_or_default();
 
     if search_body.is_empty() {
         println!("Body is empty");
