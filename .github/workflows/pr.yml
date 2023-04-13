@@ -16,4 +16,4 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          key_prefixes: "ISSUE-"
+          prefixes: "ISSUE-"

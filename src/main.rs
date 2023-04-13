@@ -17,11 +17,15 @@ struct Event {
 fn main() -> Result<ExitCode> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        println!("Usage: {} <key_prefixes>", args[0]);
+        println!("Usage: {} <prefixes>", args[0]);
         return Ok(ExitCode::FAILURE);
     }
 
-    let key_prefixes: Vec<&str> = args[1].split(',').collect();
+    let prefixes: Vec<&str> = args[1].split(',').collect();
+    if prefixes.is_empty() {
+        println!("No prefixes provided");
+        return Ok(ExitCode::FAILURE);
+    }
 
     let event: Event = {
         let event_path = env::var("GITHUB_EVENT_PATH")
@@ -61,7 +65,7 @@ fn main() -> Result<ExitCode> {
 
     let mut title_found = false;
     let mut body_found = false;
-    for prefix in key_prefixes.clone() {
+    for prefix in prefixes.clone() {
         if !title_found && search_title.contains(prefix) {
             title_found = true;
         }
@@ -74,12 +78,12 @@ fn main() -> Result<ExitCode> {
     }
 
     if !title_found {
-        println!("Title does not contain any key prefixes");
+        println!("Title does not contain any prefixes");
         return Ok(ExitCode::FAILURE);
     }
 
     if !body_found {
-        println!("Body does not contain any key prefixes");
+        println!("Body does not contain any prefixes");
         return Ok(ExitCode::FAILURE);
     }
 
