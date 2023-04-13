@@ -4,9 +4,9 @@ This action checks for issue references in a PR title and body.
 
 ## Inputs
 
-## `key_prefixes`
+## `prefixes`
 
-**Required** A comma separated list of key prefixes.
+**Required** A comma separated list of issue key prefixes.
 
 Example value: `ISSUE-` or `PLAT-,ENG-,IT-`
 
@@ -34,5 +34,5 @@ jobs:
     steps:
       - uses: ngerakines/pr-has-issues-action
         with:
-          key_prefixes: PLAT-,ENG-,IT-
+          prefixes: PLAT-,ENG-,IT-
 ```
