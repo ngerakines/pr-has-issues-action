@@ -4,7 +4,7 @@ use std::{process::ExitCode, env, fs::File, io::BufReader};
 #[tokio::main]
 async fn main() -> Result<ExitCode> {
 
-    let event = {
+    let event: serde_json::Value = {
         let event_path = env::var("GITHUB_EVENT_PATH").map_err(|err| Error::msg(err).context("GITHUB_EVENT_PATH not set"))?;
         let file = File::open(event_path)?;
         let reader = BufReader::new(file);
