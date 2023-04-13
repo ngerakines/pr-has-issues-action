@@ -4,6 +4,11 @@ use std::{process::ExitCode, env, fs::File, io::BufReader};
 #[tokio::main]
 async fn main() -> Result<ExitCode> {
 
+    println!("GITHUB_HEAD_REF {}", env::var("GITHUB_HEAD_REF").unwrap_or_default());
+    println!("GITHUB_REPOSITORY {}", env::var("GITHUB_REPOSITORY").unwrap_or_default());
+    println!("GITHUB_REF_TYPE {}", env::var("GITHUB_REF_TYPE").unwrap_or_default());
+    println!("GITHUB_REPOSITORY_OWNER {}", env::var("GITHUB_REPOSITORY_OWNER").unwrap_or_default());
+
     let event: serde_json::Value = {
         let event_path = env::var("GITHUB_EVENT_PATH").map_err(|err| Error::msg(err).context("GITHUB_EVENT_PATH not set"))?;
         let file = File::open(event_path)?;
