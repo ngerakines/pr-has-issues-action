@@ -1,5 +1,4 @@
-use anyhow::{anyhow, Result, Error};
-use serde_json_path::JsonPath;
+use anyhow::{Result, Error};
 use std::{process::ExitCode, env, fs::File, io::BufReader};
 
 #[tokio::main]
