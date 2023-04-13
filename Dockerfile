@@ -11,6 +11,8 @@ LABEL org.opencontainers.image.source=https://github.com/ngerakines/pr-has-issue
 LABEL org.opencontainers.image.description="A GitHub action that checks for issues references in pull requests."
 LABEL org.opencontainers.image.authors="Nick Gerakines <nick.gerakines@gmail.com>"
 LABEL org.opencontainers.image.licenses="MIT"
+LABEL "com.github.actions.icon"="edit"
+LABEL "com.github.actions.color"="red"
 RUN apk add --no-cache ca-certificates
 ENV RUST_LOG="warning"
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/pr-has-issues-action /usr/local/bin/pr-has-issues-action
