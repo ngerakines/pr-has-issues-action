@@ -1,0 +1,25 @@
+[package]
+name = "pr-has-issues-action"
+version = "0.1.0"
+edition = "2021"
+description = "A GitHub action that checks for issues references in pull requests."
+authors = ["Nick Gerakines <nick.gerakines@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/ngerakines/pr-has-issues-action"
+homepage = "https://github.com/ngerakines/pr-has-issues-action"
+license = "MIT"
+publish = true
+
+[dependencies]
+anyhow = "1.0.70"
+clap = {version = "4.2.1", default-features = false, features = ["derive", "error-context", "help", "std", "usage"]}
+octocrab = {version = "0.19.0", default-features = false}
+serde = "1.0.160"
+serde_json = "1.0.96"
+serde_json_path = "0.6.0"
+tokio = {version = "1.27.0", features = ["macros", "rt", "rt-multi-thread"]}
+
+[features]
+default = ["rustls"]
+native-tls = ["octocrab/native-tls"]
+rustls = ["octocrab/rustls"]
