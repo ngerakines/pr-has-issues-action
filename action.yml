@@ -2,15 +2,11 @@
 name: 'PR Has Issues'
 description: 'Checks for issues references in pull requests.'
 inputs:
-  repository:
-    description: The
-    required: true
-  pr:
-    description: The
+  prefixes:
+    description: A comma separated list of key prefixes.
     required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.repository }}
-    - ${{ inputs.pr }}
+    - ${{ inputs.prefixes }}
