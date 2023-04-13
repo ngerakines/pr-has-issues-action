@@ -1,9 +1,20 @@
 use anyhow::{Error, Result};
-use serde_json_path::JsonPath;
+use serde::Deserialize;
 use std::{env, fs::File, io::BufReader, process::ExitCode};
 
-#[tokio::main]
-async fn main() -> Result<ExitCode> {
+#[derive(Deserialize)]
+struct PullRequest {
+    title: Option<String>,
+    body: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct Event {
+    number: Option<u64>,
+    pull_request: Option<PullRequest>,
+}
+
+fn main() -> Result<ExitCode> {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("Usage: {} <key_prefixes>", args[0]);
@@ -12,7 +23,7 @@ async fn main() -> Result<ExitCode> {
 
     let key_prefixes: Vec<&str> = args[1].split(',').collect();
 
-    let event: serde_json::Value = {
+    let event: Event = {
         let event_path = env::var("GITHUB_EVENT_PATH")
             .map_err(|err| Error::msg(err).context("GITHUB_EVENT_PATH not set"))?;
         let file = File::open(event_path).map_err(|err| {
@@ -22,32 +33,21 @@ async fn main() -> Result<ExitCode> {
         serde_json::from_reader(reader)
     }?;
 
-    let number_path = JsonPath::parse("$.number")?;
-    let number_value = number_path.query(&event).at_most_one()?;
 
-    if number_value.is_none() {
+    if event.number.is_none() {
         println!("PR number not found.");
         return Ok(ExitCode::FAILURE);
     }
 
-    let title_path = JsonPath::parse("$.pull_request.title")?;
-    let search_title = title_path
-        .query(&event)
-        .at_most_one()?
-        .map(|v| v.as_str().unwrap_or_default())
-        .unwrap_or_default();
+
+    let search_title = event.pull_request.as_ref().and_then(|pr| pr.title.clone()).unwrap_or_default();
 
     if search_title.is_empty() {
         println!("Title is empty");
         return Ok(ExitCode::FAILURE);
     }
 
-    let body_path = JsonPath::parse("$.pull_request.body")?;
-    let search_body = body_path
-        .query(&event)
-        .at_most_one()?
-        .map(|v| v.as_str().unwrap_or_default())
-        .unwrap_or_default();
+    let search_body = event.pull_request.and_then(|pr| pr.body).unwrap_or_default();
 
     if search_body.is_empty() {
         println!("Body is empty");
