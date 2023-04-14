@@ -32,7 +32,7 @@ jobs:
     name: Check
     runs-on: ubuntu-latest
     steps:
-      - uses: ngerakines/pr-has-issues-action
+      - uses: ngerakines/pr-has-issues-action@v5
         with:
           prefixes: PLAT-,ENG-,IT-
 ```

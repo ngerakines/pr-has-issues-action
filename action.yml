@@ -1,11 +1,14 @@
 name: 'PR Has Issues'
 description: 'Checks for issues references in pull requests.'
+branding:
+  icon: 'edit'
+  color: 'red'
 inputs:
   prefixes:
     description: A comma separated list of key prefixes.
     required: true
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/ngerakines/pr-has-issues-action:v3'
+  image: 'docker://ghcr.io/ngerakines/pr-has-issues-action:v5'
   args:
     - ${{ inputs.prefixes }}
