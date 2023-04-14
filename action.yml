@@ -1,4 +1,3 @@
-# action.yml
 name: 'PR Has Issues'
 description: 'Checks for issues references in pull requests.'
 inputs:
@@ -7,6 +6,6 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'ghcr.io/ngerakines/pr-has-issues-action:v3'
   args:
     - ${{ inputs.prefixes }}
