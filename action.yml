@@ -6,6 +6,6 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'ghcr.io/ngerakines/pr-has-issues-action:v3'
+  image: 'docker://ghcr.io/ngerakines/pr-has-issues-action:v3'
   args:
     - ${{ inputs.prefixes }}
