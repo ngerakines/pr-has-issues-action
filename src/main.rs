@@ -1,18 +1,5 @@
 use anyhow::{Error, Result};
-use serde::Deserialize;
 use std::{env, fs::File, io::BufReader, process::ExitCode};
-
-#[derive(Deserialize)]
-struct PullRequest {
-    title: Option<String>,
-    body: Option<String>,
-}
-
-#[derive(Deserialize)]
-struct Event {
-    number: Option<u64>,
-    pull_request: Option<PullRequest>,
-}
 
 fn main() -> Result<ExitCode> {
     let args: Vec<String> = env::args().collect();
@@ -27,7 +14,7 @@ fn main() -> Result<ExitCode> {
         return Ok(ExitCode::FAILURE);
     }
 
-    let event: Event = {
+    let event: serde_json::Value = {
         let event_path = env::var("GITHUB_EVENT_PATH")
             .map_err(|err| Error::msg(err).context("GITHUB_EVENT_PATH not set"))?;
         let file = File::open(event_path).map_err(|err| {
@@ -37,15 +24,16 @@ fn main() -> Result<ExitCode> {
         serde_json::from_reader(reader)
     }?;
 
-    if event.number.is_none() {
+    let number = event.get("number").and_then(|number| number.as_u64());
+    if number.is_none() {
         println!("PR number not found.");
         return Ok(ExitCode::FAILURE);
     }
 
     let search_title = event
-        .pull_request
-        .as_ref()
-        .and_then(|pr| pr.title.clone())
+        .get("pull_request")
+        .and_then(|pr| pr.get("title"))
+        .and_then(|title| title.as_str())
         .unwrap_or_default();
 
     if search_title.is_empty() {
@@ -54,8 +42,9 @@ fn main() -> Result<ExitCode> {
     }
 
     let search_body = event
-        .pull_request
-        .and_then(|pr| pr.body)
+        .get("pull_request")
+        .and_then(|pr| pr.get("body"))
+        .and_then(|body| body.as_str())
         .unwrap_or_default();
 
     if search_body.is_empty() {
